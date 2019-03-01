@@ -1,0 +1,32 @@
+{
+  "name": "ng-deploy",
+  "version": "0.0.0",
+  "description": "A blank schematics",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "tsc -p tsconfig.json -w",
+    "test": "npm run build && jasmine src/**/*_spec.js"
+  },
+  "keywords": [
+    "schematics"
+  ],
+  "author": "",
+  "license": "MIT",
+  "schematics": "./src/collection.json",
+  "builders": "./src/builders/builders.json",
+  "dependencies": {
+    "@angular-devkit/architect": "^0.14.0-beta.4",
+    "@angular-devkit/core": "^7.2.3",
+    "@angular-devkit/schematics": "^7.2.3",
+    "@types/firebase": "^3.2.1",
+    "@types/jasmine": "^2.6.0",
+    "@types/node": "^8.0.31",
+    "firebase-tools": "^6.3.1",
+    "jasmine": "^2.8.0",
+    "typescript": "~3.2.2"
+  },
+  "devDependencies": {
+    "@angular/cli": "^7.3.4",
+    "schematics-utilities": "^1.1.1"
+  }
+}
