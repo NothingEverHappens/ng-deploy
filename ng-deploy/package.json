@@ -26,7 +26,7 @@
     "typescript": "~3.2.2"
   },
   "devDependencies": {
-    "@angular/cli": "^7.3.4",
+    "@angular/cli": "^8.0.0-beta.4",
     "schematics-utilities": "^1.1.1"
   }
 }
