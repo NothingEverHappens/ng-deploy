@@ -1,0 +1,10 @@
+{
+  "$schema": "../architect/src/builders-schema.json",
+  "builders": {
+    "deploy": {
+      "implementation": "./src/builders/builder",
+      "schema": "./src/builders/schema.json",
+      "description": "Deploy builder"
+    }
+  }
+}

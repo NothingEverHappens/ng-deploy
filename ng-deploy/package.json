@@ -12,8 +12,8 @@
   ],
   "author": "",
   "license": "MIT",
-  "schematics": "./src/collection.json",
-  "builders": "./src/builders/builders.json",
+  "schematics": "./collection.json",
+  "builders": "./builders.json",
   "dependencies": {
     "@angular-devkit/architect": "^0.14.0-beta.4",
     "@angular-devkit/core": "^7.2.3",

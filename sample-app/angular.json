@@ -102,7 +102,7 @@
           }
         },
         "deploy": {
-          "builder": "../ng-deploy:deploy",
+          "builder": "ng-deploy:deploy",
           "options": {}
         }
       }
