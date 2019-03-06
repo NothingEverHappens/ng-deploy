@@ -5,6 +5,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "start": "tsc -p tsconfig.json -w",
+    "format": "prettier --config ./.prettierrc \"*.{json,md}\" \"src/**/*.{css,scss,ts}\" \"test/**/*.{css,scss,ts}\" --write",
     "test": "npm run build && jasmine src/**/*_spec.js"
   },
   "keywords": [
@@ -29,6 +30,7 @@
   "devDependencies": {
     "@angular/cli": "^8.0.0-beta.4",
     "@types/inquirer": "0.0.44",
+    "prettier": "^1.16.4",
     "schematics-utilities": "^1.1.1"
   }
 }

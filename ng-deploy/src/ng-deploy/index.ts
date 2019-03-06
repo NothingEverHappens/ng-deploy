@@ -9,11 +9,7 @@ import * as inquirer from 'inquirer';
 const firebaseJson = {
   hosting: {
     public: 'dist/',
-    ignore: [
-      'firebase.json',
-      '**/.*',
-      '**/node_modules/**'
-    ],
+    ignore: ['firebase.json', '**/.*', '**/node_modules/**'],
     rewrites: [
       {
         source: '**',
@@ -39,12 +35,10 @@ interface Project {
   id: string;
 }
 
-
 // You don't have to export the function as default. You can also have more than one rule factory
 // per file.
 export function ngDeploy(_options: any): Rule {
   return (tree: Tree, _context: SchematicContext) => {
-
     // TODO(kirjs): Uncomment
     // const ngDeploy = {
     //   type: NodeDependencyType.Dev,
@@ -56,13 +50,21 @@ export function ngDeploy(_options: any): Rule {
 
     _context.addTask(new NodePackageInstallTask());
 
-    return from<Tree>(listProjects().then((projects: Project[]) => {
-        return inquirer.prompt({ type: 'list', name: 'project', choices: projects.map(p => ({ name: `${p.id} (${p.name})`, value: p.id })), message: 'Please select a project:' })
-        .then((project: string) => {
-          overwriteIfExists(tree, 'firebase.json', JSON.stringify(firebaseJson));
-          overwriteIfExists(tree, '.firebaserc', JSON.stringify(firebaserc(project)))
-          return tree;
-      });
-    }));
-  }
+    return from<Tree>(
+      listProjects().then((projects: Project[]) => {
+        return inquirer
+          .prompt({
+            type: 'list',
+            name: 'project',
+            choices: projects.map(p => ({ name: `${p.id} (${p.name})`, value: p.id })),
+            message: 'Please select a project:'
+          })
+          .then((project: string) => {
+            overwriteIfExists(tree, 'firebase.json', JSON.stringify(firebaseJson));
+            overwriteIfExists(tree, '.firebaserc', JSON.stringify(firebaserc(project)));
+            return tree;
+          });
+      })
+    );
+  };
 }
