@@ -1,8 +1,19 @@
-import { execSync, spawnSync } from "child_process";
+import { BuilderContext } from '@angular-devkit/architect/src/index2';
 
-export default function deploy() {
-    const bin = execSync('(cd ' + __dirname + ' && npm bin)').toString().trim();
-    const firebaseBin = bin + '/firebase';
-    spawnSync(firebaseBin, ['login'], {stdio: 'inherit'});
-    spawnSync(firebaseBin, ['deploy', '--only', 'hosting'], {stdio: 'inherit'});
+const tools = require('firebase-tools');
+
+export default function deploy(context: BuilderContext) {
+    return tools.list().then(() => {
+        context.logger.info('You\'re already logged into Firebase');
+    }).catch(() => {
+        context.logger.info('You\'re not logged into Firebase. Logging you in...');
+        return tools.login();
+    })
+    .then(() => {
+        context.logger.info('Building your application' + context.workspaceRoot);
+        if (!context.target) {
+            throw new Error('Cannot execute the build target')
+        }
+        return context.scheduleTarget({ target: 'build', project: context.target.project });
+    })
 }
