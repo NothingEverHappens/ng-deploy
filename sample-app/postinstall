@@ -1,0 +1,2 @@
+echo "Replacing devkit core"
+cp -r node_modules/\@angular-devkit/core/* node_modules/\@angular-devkit/build-angular/node_modules/@angular-devkit/core/

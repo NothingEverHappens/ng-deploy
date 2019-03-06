@@ -7,11 +7,12 @@
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "postinstall": "bash postinstall"
   },
   "private": true,
   "dependencies": {
-    "@angular-devkit/build-webpack": "^0.14.0-beta.4",
+    "@angular-devkit/build-webpack": "_angular-devkit_build-webpack.tgz",
     "@angular/animations": "~7.2.0",
     "@angular/common": "~7.2.0",
     "@angular/compiler": "~7.2.0",
@@ -26,8 +27,10 @@
     "zone.js": "~0.8.26"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^0.14.0-beta.4",
-    "@angular/cli": "^8.0.0-beta.4",
+    "@angular-devkit/build-angular": "_angular-devkit_build-angular.tgz",
+    "@angular-devkit/core": "_angular-devkit_core.tgz",
+    "@angular-devkit/architect": "_angular-devkit_architect.tgz",
+    "@angular/cli": "_angular_cli.tgz",
     "@angular/compiler-cli": "~7.2.0",
     "@angular/language-service": "~7.2.0",
     "@types/jasmine": "~2.8.8",
