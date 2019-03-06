@@ -7,3 +7,10 @@ export default function init() {
     spawnSync(firebaseBin, ['login'], {stdio: 'inherit'});
     spawnSync(firebaseBin, ['init', 'hosting'], {stdio: 'inherit'});
 }
+
+const firebase = require('firebase-tools');
+
+export const listProjects = () => {
+    return firebase.list()
+        .catch(() => firebase.login().then(() => firebase.list()));
+};

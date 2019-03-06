@@ -1,6 +1,10 @@
 import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 // import {addPackageJsonDependency,  NodeDependencyType} from 'schematics-utilities';
 import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
+import { from } from 'rxjs';
+import { listProjects } from '../builders/actions/init';
+
+import * as inquirer from 'inquirer';
 
 const firebaseJson = {
   hosting: {
@@ -19,10 +23,21 @@ const firebaseJson = {
   }
 };
 
+const firebaserc = (project: string) => ({
+  projects: {
+    default: project
+  }
+});
+
 const overwriteIfExists = (tree: Tree, path: string, content: string) => {
   if (tree.exists(path)) tree.overwrite(path, content);
   else tree.create(path, content);
 };
+
+interface Project {
+  name: string;
+  id: string;
+}
 
 
 // You don't have to export the function as default. You can also have more than one rule factory
@@ -40,9 +55,14 @@ export function ngDeploy(_options: any): Rule {
     // addPackageJsonDependency(tree, ngDeploy);
 
     _context.addTask(new NodePackageInstallTask());
-    overwriteIfExists(tree, 'firebase.json', JSON.stringify(firebaseJson));
-    overwriteIfExists(tree, '.firebaserc', '{}')
 
-    return tree;
-  };
+    return from<Tree>(listProjects().then((projects: Project[]) => {
+        return inquirer.prompt({ type: 'list', name: 'project', choices: projects.map(p => ({ name: `${p.id} (${p.name})`, value: p.id })), message: 'Please select a project:' })
+        .then((project: string) => {
+          overwriteIfExists(tree, 'firebase.json', JSON.stringify(firebaseJson));
+          overwriteIfExists(tree, '.firebaserc', JSON.stringify(firebaserc(project)))
+          return tree;
+      });
+    }));
+  }
 }

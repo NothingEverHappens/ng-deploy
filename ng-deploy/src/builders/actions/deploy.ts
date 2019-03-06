@@ -23,7 +23,6 @@ export default function deploy(context: BuilderContext) {
                 }
                 context.logger.info(join(context.workspaceRoot, 'dist', context.target!.project));
                 return tools.deploy({
-                    project: 'foo',
                     token: process.env.FIREBASE_TOKEN,
                     cwd: join(context.workspaceRoot, 'dist', context.target.project)
                 });

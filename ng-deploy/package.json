@@ -22,11 +22,13 @@
     "@types/jasmine": "^2.6.0",
     "@types/node": "^8.0.31",
     "firebase-tools": "^6.3.1",
+    "inquirer": "^6.2.2",
     "jasmine": "^2.8.0",
     "typescript": "~3.2.2"
   },
   "devDependencies": {
     "@angular/cli": "^8.0.0-beta.4",
+    "@types/inquirer": "0.0.44",
     "schematics-utilities": "^1.1.1"
   }
 }
