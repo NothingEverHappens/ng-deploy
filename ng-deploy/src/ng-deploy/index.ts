@@ -25,6 +25,8 @@ const firebaserc = (project: string) => ({
   }
 });
 
+const stringify = (obj: any) => JSON.stringify(obj, null, 2);
+
 const overwriteIfExists = (tree: Tree, path: string, content: string) => {
   if (tree.exists(path)) tree.overwrite(path, content);
   else tree.create(path, content);
@@ -56,12 +58,12 @@ export function ngDeploy(_options: any): Rule {
           .prompt({
             type: 'list',
             name: 'project',
-            choices: projects.map(p => ({ name: `${p.id} (${p.name})`, value: p.id })),
+            choices: projects.map(p => ({ name: `${p.id} (${p.name})`, value: p.id })).sort(),
             message: 'Please select a project:'
           })
           .then((project: string) => {
-            overwriteIfExists(tree, 'firebase.json', JSON.stringify(firebaseJson));
-            overwriteIfExists(tree, '.firebaserc', JSON.stringify(firebaserc(project)));
+            overwriteIfExists(tree, 'firebase.json', stringify(firebaseJson));
+            overwriteIfExists(tree, '.firebaserc', stringify(firebaserc(project)));
             return tree;
           });
       })

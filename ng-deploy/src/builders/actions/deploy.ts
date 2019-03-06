@@ -24,17 +24,17 @@ export default function deploy(context: BuilderContext) {
           if (!context.target) {
             throw new Error('Cannot execute the build target');
           }
-          context.logger.info(join(context.workspaceRoot, 'dist', context.target!.project));
+          context.logger.info(join(context.workspaceRoot, 'dist', context.target.project));
           return tools.deploy({
             token: process.env.FIREBASE_TOKEN,
-            cwd: join(context.workspaceRoot, 'dist', context.target.project)
+            cwd: context.workspaceRoot
           });
         })
         .then(() => {
           context.logger.info('Successful deployment');
         })
         .catch(e => {
-          console.log(e);
+          console.error(e);
         });
     });
 }
