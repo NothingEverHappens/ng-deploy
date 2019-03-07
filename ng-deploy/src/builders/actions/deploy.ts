@@ -18,7 +18,7 @@ export default function deploy(context: BuilderContext) {
       if (!context.target) {
         throw new Error('Cannot execute the build target');
       }
-      return Promise.resolve({ result: Promise.resolve(42) }) //context.scheduleTarget({ target: 'build', project: context.target.project, configuration: 'production' })
+      return context.scheduleTarget({ target: 'build', project: context.target.project, configuration: 'production' })
         .then(res => res.result)
         .then(() => {
           if (!context.target) {
@@ -31,7 +31,7 @@ export default function deploy(context: BuilderContext) {
           });
         })
         .then(() => {
-          context.logger.info('Successful deployment');
+          context.logger.info('Successful deployment 🚀');
         })
         .catch(e => {
           console.error(e);
