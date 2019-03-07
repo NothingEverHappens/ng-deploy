@@ -1,5 +1,5 @@
 export interface Project {
   name: string;
   id: string;
-  permission: 'edit'|'view'|'own';
+  permission: 'edit' | 'view' | 'own';
 }

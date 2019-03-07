@@ -56,12 +56,11 @@ export function ngDeploy(options: DeployOptions): Rule {
 
     return from<Tree>(
       listProjects().then((projects: Project[]) => {
-        return projectPrompt(projects)
-          .then(({project}: any) => {
-            overwriteIfExists(tree, 'firebase.json', stringify(firebaseJson(options.project)));
-            overwriteIfExists(tree, '.firebaserc', stringify(firebaserc(project)));
-            return tree;
-          });
+        return projectPrompt(projects).then(({ project }: any) => {
+          overwriteIfExists(tree, 'firebase.json', stringify(firebaseJson(options.project)));
+          overwriteIfExists(tree, '.firebaserc', stringify(firebaserc(project)));
+          return tree;
+        });
       })
     );
   };
