@@ -6,6 +6,7 @@ import deploy from './actions/deploy';
 // createJobHandler() but add typings specific to Architect Builders.
 export default createBuilder<any>(
   (_: any, context: BuilderContext): Promise<BuilderOutput> => {
+    // TODO: handle failure
     // The project root is added to a BuilderContext.
     return deploy(context).then(() => ({ success: true }));
   }
