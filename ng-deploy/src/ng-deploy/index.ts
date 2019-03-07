@@ -1,4 +1,4 @@
-import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
+import { Rule, Tree, SchematicsException } from '@angular-devkit/schematics';
 // import {addPackageJsonDependency,  NodeDependencyType} from 'schematics-utilities';
 // import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
 import { from } from 'rxjs';
@@ -6,9 +6,9 @@ import { listProjects } from '../builders/actions/init';
 import { Project } from './types';
 import { projectPrompt } from './project-prompt';
 
-const firebaseJson = {
+const firebaseJson = (project: string) => ({
   hosting: {
-    public: 'dist/',
+    public: 'dist/' + project,
     ignore: ['firebase.json', '**/.*', '**/node_modules/**'],
     rewrites: [
       {
@@ -17,7 +17,7 @@ const firebaseJson = {
       }
     ]
   }
-};
+});
 
 const firebaserc = (project: string) => ({
   projects: {
@@ -32,11 +32,17 @@ const overwriteIfExists = (tree: Tree, path: string, content: string) => {
   else tree.create(path, content);
 };
 
+interface DeployOptions {
+  project: string;
+}
 
 // You don't have to export the function as default. You can also have more than one rule factory
 // per file.
-export function ngDeploy(_options: any): Rule {
-  return (tree: Tree, _context: SchematicContext) => {
+export function ngDeploy(options: DeployOptions): Rule {
+  return (tree: Tree) => {
+    if (!options.project) {
+      throw new SchematicsException('Option "project" is required.');
+    }
     // TODO(kirjs): Uncomment
     // const ngDeploy = {
     //   type: NodeDependencyType.Dev,
@@ -52,7 +58,7 @@ export function ngDeploy(_options: any): Rule {
       listProjects().then((projects: Project[]) => {
         return projectPrompt(projects)
           .then(({project}: any) => {
-            overwriteIfExists(tree, 'firebase.json', stringify(firebaseJson));
+            overwriteIfExists(tree, 'firebase.json', stringify(firebaseJson(options.project)));
             overwriteIfExists(tree, '.firebaserc', stringify(firebaserc(project)));
             return tree;
           });

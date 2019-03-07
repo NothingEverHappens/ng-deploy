@@ -1,20 +1,16 @@
 import { BuilderContext } from '@angular-devkit/architect/src/index2';
-import { join } from 'path';
 
 const tools = require('firebase-tools');
 
 export default function deploy(context: BuilderContext) {
   return tools
     .list()
-    .then(() => {
-      context.logger.info("You're already logged into Firebase");
-    })
     .catch(() => {
-      context.logger.info("You're not logged into Firebase. Logging you in...");
+      context.logger.warn("🚨 You're not logged into Firebase. Logging you in...");
       return tools.login();
     })
     .then(() => {
-      context.logger.info('Building your application');
+      context.logger.info('📦 Building your application...');
       if (!context.target) {
         throw new Error('Cannot execute the build target');
       }
@@ -24,17 +20,15 @@ export default function deploy(context: BuilderContext) {
           if (!context.target) {
             throw new Error('Cannot execute the build target');
           }
-          context.logger.info(join(context.workspaceRoot, 'dist', context.target.project));
           return tools.deploy({
-            token: process.env.FIREBASE_TOKEN,
             cwd: context.workspaceRoot
           });
         })
-        .then(() => {
-          context.logger.info('Successful deployment 🚀');
+        .then((success: {hosting: string}) => {
+          context.logger.info(`🚀 Your application is now available at https://${success.hosting.split('/')[1]}.firebaseapp.com/`)
         })
         .catch(e => {
-          console.error(e);
+          context.logger.error(e);
         });
     });
 }
