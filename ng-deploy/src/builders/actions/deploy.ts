@@ -1,10 +1,7 @@
 import { BuilderContext } from '@angular-devkit/architect/src/index2';
-import { virtualFs, experimental, normalize } from '@angular-devkit/core';
-import { Stats } from '@angular-devkit/core/src/virtual-fs/host';
-import { join } from 'path';
 import { FirebaseTools } from '../../ng-deploy/types';
 
-export default async function deploy(firebaseTools: FirebaseTools, context: BuilderContext, host: virtualFs.Host<Stats>,) {
+export default async function deploy(firebaseTools: FirebaseTools, context: BuilderContext, projectRoot: string) {
   try {
     await firebaseTools.list();
   } catch (e) {
@@ -23,13 +20,8 @@ export default async function deploy(firebaseTools: FirebaseTools, context: Buil
     throw new Error('Cannot execute the build target');
   }
 
-  const root = normalize(context.workspaceRoot);
-  const workspace = new experimental.workspace.Workspace(root, host)
-  await workspace.loadWorkspaceFromHost(normalize('angular.json')).toPromise();
-  const project = workspace.getProject(context.target.project)
-
   try {
-    const success = await firebaseTools.deploy({ cwd: join(context.workspaceRoot, project.root) });
+    const success = await firebaseTools.deploy({ cwd: projectRoot });
     context.logger.info(`🚀 Your application is now available at https://${success.hosting.split('/')[1]}.firebaseapp.com/`);
   } catch (e) {
     context.logger.error(e);
