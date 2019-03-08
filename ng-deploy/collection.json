@@ -3,7 +3,7 @@
   "schematics": {
     "ng-add": {
       "description": "Add firebase deploy schematic",
-      "factory": "./ng-deploy/index#ngDeploy"
+      "factory": "./src/ng-deploy/index#ngDeploy"
     }
   }
 }

@@ -1,9 +1,7 @@
-import { execSync, spawnSync } from 'child_process';
+const firebase = require('firebase-tools');
 
-export default function init() {
-// TODO(kirjs): Is there a  better way?
-    const bin = execSync('(cd ' + __dirname + ' && npm bin)').toString().trim();
-    const firebaseBin = bin + '/firebase';
-    spawnSync(firebaseBin, ['login'], {stdio: 'inherit'});
-    spawnSync(firebaseBin, ['init', 'hosting'], {stdio: 'inherit'});
-}
+export const listProjects = () => {
+  return firebase.list().catch(
+    /* If list failed, then login and try again. */
+    () => firebase.login().then(() => firebase.list()));
+};
