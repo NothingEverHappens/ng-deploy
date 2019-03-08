@@ -16,6 +16,7 @@ describe('Deploy Angular apps', () => {
     const spy = spyOn(firebaseMock, 'list');
     const spyLogin = spyOn(firebaseMock, 'login');
     try {
+      // workspace would be null (see mocks below) so this call will throw
       await deploy(firebaseMock, context, host);
     } catch (e) {}
     expect(spy).toHaveBeenCalled();
@@ -27,6 +28,7 @@ describe('Deploy Angular apps', () => {
     const spy = spyOn(firebaseMock, 'list').and.callThrough();
     const spyLogin = spyOn(firebaseMock, 'login');
     try {
+      // workspace would be null (see mocks below) so this call will throw
       await deploy(firebaseMock, context, host);
     } catch (e) {}
     expect(spy).toHaveBeenCalled();
