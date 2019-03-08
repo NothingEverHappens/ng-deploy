@@ -3,16 +3,14 @@ import { virtualFs, experimental, normalize } from '@angular-devkit/core';
 import { Stats } from '@angular-devkit/core/src/virtual-fs/host';
 import { CoreSchemaRegistry, transforms } from '@angular-devkit/core/src/json/schema';
 import { join } from 'path';
+import { FirebaseTools } from '../../ng-deploy/types';
 
-const tools = require('firebase-tools');
-
-export default async function deploy(context: BuilderContext, host: virtualFs.Host<Stats>,) {
-  
+export default async function deploy(firebaseTools: FirebaseTools, context: BuilderContext, host: virtualFs.Host<Stats>,) {
   try {
-    await tools.list();
+    await firebaseTools.list();
   } catch (e) {
     context.logger.warn("🚨 You're not logged into Firebase. Logging you in...");
-    await tools.login();
+    await firebaseTools.login();
   }
   if (!context.target) {
     throw new Error('Cannot execute the build target');
@@ -34,7 +32,7 @@ export default async function deploy(context: BuilderContext, host: virtualFs.Ho
   const project = workspace.getProject(context.target.project)
 
   try {
-    const success = await tools.deploy({ cwd: join(context.workspaceRoot, project.root) });
+    const success = await firebaseTools.deploy({ cwd: join(context.workspaceRoot, project.root) });
     context.logger.info(`🚀 Your application is now available at https://${success.hosting.split('/')[1]}.firebaseapp.com/`);
   } catch (e) {
     context.logger.error(e);
