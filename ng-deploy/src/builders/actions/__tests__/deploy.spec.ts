@@ -42,9 +42,7 @@ describe('Deploy Angular apps', () => {
     await deploy(firebaseMock, context, 'host');
     expect(spy).toHaveBeenCalled();
     expect(spy).toHaveBeenCalledWith({
-      target: 'build',
-      configuration: 'production',
-      project: 'foo'
+      cwd: 'host',
     });
   });
 });

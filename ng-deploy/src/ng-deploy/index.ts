@@ -101,14 +101,14 @@ export function ngDeploy(options: DeployOptions): Rule {
 
     host.overwrite(workspacePath, JSON.stringify(workspace, null, 2));
 
-    return from<Tree>(
+    return from<Promise<Tree>>(
       listProjects().then((projects: Project[]) => {
         return projectPrompt(projects).then(({ project }: any) => {
           overwriteIfExists(host, join(normalize(root), 'firebase.json'), stringify(firebaseJson(root, outputPath)));
           overwriteIfExists(host, join(normalize(root), '.firebaserc'), stringify(firebaserc(project)));
           return host;
         });
-      }) as Promise<Tree>
+      })
     );
   };
 }
