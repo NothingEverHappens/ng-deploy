@@ -4,6 +4,8 @@ const fuzzy = require('fuzzy');
 
 inquirer.registerPrompt('autocomplete', require('inquirer-autocomplete-prompt'));
 
+// `fuzzy` passes either the original list of projects or an internal object
+// which contains the project as a property.
 const isProject = (elem: Project | { original: Project }): elem is Project => {
   return (<{ original: Project }>elem).original === undefined;
 };

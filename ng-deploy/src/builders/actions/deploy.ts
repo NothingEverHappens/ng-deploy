@@ -1,7 +1,6 @@
 import { BuilderContext } from '@angular-devkit/architect/src/index2';
 import { virtualFs, experimental, normalize } from '@angular-devkit/core';
 import { Stats } from '@angular-devkit/core/src/virtual-fs/host';
-import { CoreSchemaRegistry, transforms } from '@angular-devkit/core/src/json/schema';
 import { join } from 'path';
 import { FirebaseTools } from '../../ng-deploy/types';
 
@@ -24,8 +23,6 @@ export default async function deploy(firebaseTools: FirebaseTools, context: Buil
     throw new Error('Cannot execute the build target');
   }
 
-  const registry = new CoreSchemaRegistry();
-  registry.addPostTransform(transforms.addUndefinedDefaults);
   const root = normalize(context.workspaceRoot);
   const workspace = new experimental.workspace.Workspace(root, host)
   await workspace.loadWorkspaceFromHost(normalize('angular.json')).toPromise();
