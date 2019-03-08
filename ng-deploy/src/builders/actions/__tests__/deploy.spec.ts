@@ -1,11 +1,8 @@
 import deploy from '../deploy';
 import { FirebaseTools, FirebaseDeployConfig } from '../../../ng-deploy/types';
-import { virtualFs, Path, logging, JsonObject, PathFragment } from '@angular-devkit/core';
+import { logging, JsonObject } from '@angular-devkit/core';
 import { BuilderContext, Target, ScheduleOptions, BuilderRun, } from '@angular-devkit/architect/src/index2';
-import { FileBufferLike, HostWatchOptions, HostWatchEvent, FileBuffer } from '@angular-devkit/core/src/virtual-fs/host';
-import { Observable, of } from 'rxjs';
 
-let host: virtualFs.Host;
 let context: BuilderContext
 let firebaseMock: FirebaseTools;
 
@@ -15,10 +12,7 @@ describe('Deploy Angular apps', () => {
   it('should check if the user is authenticated by invoking list', async () => {
     const spy = spyOn(firebaseMock, 'list');
     const spyLogin = spyOn(firebaseMock, 'login');
-    try {
-      // workspace would be null (see mocks below) so this call will throw
-      await deploy(firebaseMock, context, host);
-    } catch (e) {}
+    await deploy(firebaseMock, context, 'host');
     expect(spy).toHaveBeenCalled();
     expect(spyLogin).not.toHaveBeenCalled();
   });
@@ -27,40 +21,35 @@ describe('Deploy Angular apps', () => {
     firebaseMock.list = () => Promise.reject();
     const spy = spyOn(firebaseMock, 'list').and.callThrough();
     const spyLogin = spyOn(firebaseMock, 'login');
-    try {
-      // workspace would be null (see mocks below) so this call will throw
-      await deploy(firebaseMock, context, host);
-    } catch (e) {}
+    await deploy(firebaseMock, context, 'host');
     expect(spy).toHaveBeenCalled();
     expect(spyLogin).toHaveBeenCalled();
   });
 
   it('should invoke the builder', async () => {
     const spy = spyOn(context, 'scheduleTarget').and.callThrough();
-    try {
-      await deploy(firebaseMock, context, host);
-    } catch (e) {}
+    await deploy(firebaseMock, context, 'host');
     expect(spy).toHaveBeenCalled();
+    expect(spy).toHaveBeenCalledWith({
+      target: 'build',
+      configuration: 'production',
+      project: 'foo'
+    });
+  });
+
+  it('should invoke firebase.deploy', async () => {
+    const spy = spyOn(firebaseMock, 'deploy').and.callThrough();
+    await deploy(firebaseMock, context, 'host');
+    expect(spy).toHaveBeenCalled();
+    expect(spy).toHaveBeenCalledWith({
+      target: 'build',
+      configuration: 'production',
+      project: 'foo'
+    });
   });
 });
 
 const initMocks = () => {
-  host = {
-    write: (_: Path, __: FileBufferLike): Observable<void> => of(),
-    delete: (_: Path): Observable<void> => of(),
-    rename: (_: Path, __: Path): Observable<void> => of(),
-    watch: (_: Path, __?: HostWatchOptions): Observable<HostWatchEvent> | null => null,
-    capabilities: {
-      synchronous: true
-    },
-    read: (_: Path): Observable<FileBuffer> => of(),
-    list: (_: Path): Observable<PathFragment[]> => of([]),
-    exists: (_: Path): Observable<boolean> => of(true),
-    isDirectory: (_: Path): Observable<boolean> => of(true),
-    isFile: (_: Path): Observable<boolean> => of(true),
-    stat: (_: Path): Observable<null> | null => null
-  };
-
   firebaseMock = {
     login: () => Promise.resolve(),
     list: () => Promise.resolve([]),

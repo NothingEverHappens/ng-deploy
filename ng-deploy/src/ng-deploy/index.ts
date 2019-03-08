@@ -108,7 +108,7 @@ export function ngDeploy(options: DeployOptions): Rule {
           overwriteIfExists(host, join(normalize(root), '.firebaserc'), stringify(firebaserc(project)));
           return host;
         });
-      })
+      }) as Promise<Tree>
     );
   };
 }
