@@ -62,7 +62,7 @@ function getWorkspace(
 // You don't have to export the function as default. You can also have more than one rule factory
 // per file.
 export function ngDeploy(options: DeployOptions): Rule {
-  return (tree: Tree) => {
+  return (host: Tree) => {
     if (!options.project) {
       throw new SchematicsException('Option "project" is required.');
     }
@@ -77,7 +77,7 @@ export function ngDeploy(options: DeployOptions): Rule {
 
     // _context.addTask(new NodePackageInstallTask());
 
-    const { workspace } = getWorkspace(tree);
+    const { path: workspacePath, workspace } = getWorkspace(host);
     const project = workspace.projects[options.project];
     if (!project) {
       throw new SchematicsException('Project is not defined in this workspace.');
@@ -94,12 +94,19 @@ export function ngDeploy(options: DeployOptions): Rule {
     const outputPath = project.architect.build.options.outputPath;
     const root = project.root;
 
+    project.architect['deploy'] = {
+      builder: 'ng-deploy:deploy',
+      options: {}
+    };
+
+    host.overwrite(workspacePath, JSON.stringify(workspace, null, 2));
+
     return from<Tree>(
       listProjects().then((projects: Project[]) => {
         return projectPrompt(projects).then(({ project }: any) => {
-          overwriteIfExists(tree, join(normalize(root), 'firebase.json'), stringify(firebaseJson(root, outputPath)));
-          overwriteIfExists(tree, join(normalize(root), '.firebaserc'), stringify(firebaserc(project)));
-          return tree;
+          overwriteIfExists(host, join(normalize(root), 'firebase.json'), stringify(firebaseJson(root, outputPath)));
+          overwriteIfExists(host, join(normalize(root), '.firebaserc'), stringify(firebaserc(project)));
+          return host;
         });
       })
     );
