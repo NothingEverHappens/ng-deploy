@@ -32,6 +32,14 @@ describe('Deploy Angular apps', () => {
     expect(spy).toHaveBeenCalled();
     expect(spyLogin).toHaveBeenCalled();
   });
+
+  it('should invoke the builder', async () => {
+    const spy = spyOn(context, 'scheduleTarget').and.callThrough();
+    try {
+      await deploy(firebaseMock, context, host);
+    } catch (e) {}
+    expect(spy).toHaveBeenCalled();
+  });
 });
 
 const initMocks = () => {
@@ -58,7 +66,11 @@ const initMocks = () => {
   };
 
   context = {
-    target: undefined,
+    target: {
+      configuration: 'production',
+      project: 'foo',
+      target: 'foo'
+    },
     builder: {
       builderName: 'mock',
       description: 'mock',
