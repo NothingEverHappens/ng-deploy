@@ -1,15 +1,16 @@
 import { Rule, Tree, SchematicsException } from '@angular-devkit/schematics';
-import {parseJson, JsonParseMode, experimental} from '@angular-devkit/core';
+import {parseJson, JsonParseMode, experimental, normalize} from '@angular-devkit/core';
 // import {addPackageJsonDependency,  NodeDependencyType} from 'schematics-utilities';
 // import { NodePackageInstallTask } from '@angular-devkit/schematics/tasks';
 import { from } from 'rxjs';
 import { listProjects } from '../builders/actions/init';
 import { Project } from './types';
 import { projectPrompt } from './project-prompt';
+import { sep, join } from 'path';
 
-const firebaseJson = (path: string) => ({
+const firebaseJson = (root: string, path: string) => ({
   hosting: {
-    public: path,
+    public: join(`..${sep}`.repeat(root.split(sep).length - 1), path),
     ignore: ['firebase.json', '**/.*', '**/node_modules/**'],
     rewrites: [
       {
@@ -91,12 +92,13 @@ export function ngDeploy(options: DeployOptions): Rule {
     }
 
     const outputPath = project.architect.build.options.outputPath;
+    const root = project.root;
 
     return from<Tree>(
       listProjects().then((projects: Project[]) => {
         return projectPrompt(projects).then(({ project }: any) => {
-          overwriteIfExists(tree, 'firebase.json', stringify(firebaseJson(outputPath)));
-          overwriteIfExists(tree, '.firebaserc', stringify(firebaserc(project)));
+          overwriteIfExists(tree, join(normalize(root), 'firebase.json'), stringify(firebaseJson(root, outputPath)));
+          overwriteIfExists(tree, join(normalize(root), '.firebaserc'), stringify(firebaserc(project)));
           return tree;
         });
       })
