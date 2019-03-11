@@ -1,0 +1,165 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ng-add generating files generates new files if starting from scratch 1`] = `
+"{
+  \\"hosting\\": [
+    {
+      \\"target\\": \\"pie-ka-chu\\",
+      \\"public\\": \\"dist/ikachu\\",
+      \\"ignore\\": [
+        \\"firebase.json\\",
+        \\"**/.*\\",
+        \\"**/node_modules/**\\"
+      ],
+      \\"rewrites\\": [
+        {
+          \\"source\\": \\"**\\",
+          \\"destination\\": \\"/index.html\\"
+        }
+      ]
+    }
+  ]
+}"
+`;
+
+exports[`ng-add generating files generates new files if starting from scratch 2`] = `
+"{
+  \\"targets\\": {
+    \\"pirojok-111e3\\": {
+      \\"hosting\\": {
+        \\"pie-ka-chu\\": [
+          \\"pirojok-111e3\\"
+        ]
+      }
+    }
+  }
+}"
+`;
+
+exports[`ng-add generating files generates new files if starting from scratch 3`] = `
+"{
+  \\"projects\\": {
+    \\"pie-ka-chu\\": {
+      \\"projectType\\": \\"application\\",
+      \\"root\\": \\"pirojok\\",
+      \\"architect\\": {
+        \\"build\\": {
+          \\"options\\": {
+            \\"outputPath\\": \\"dist/ikachu\\"
+          }
+        },
+        \\"deploy\\": {
+          \\"builder\\": \\"ng-deploy:deploy\\",
+          \\"options\\": {}
+        }
+      }
+    },
+    \\"pi-catch-you\\": {
+      \\"projectType\\": \\"application\\",
+      \\"root\\": \\"pirojok\\",
+      \\"architect\\": {
+        \\"build\\": {
+          \\"options\\": {
+            \\"outputPath\\": \\"dist/ikachu\\"
+          }
+        }
+      }
+    }
+  }
+}"
+`;
+
+exports[`ng-add generating files overrides existing files 1`] = `
+"{
+  \\"hosting\\": [
+    {
+      \\"target\\": \\"pie-ka-chu\\",
+      \\"public\\": \\"dist/ikachu\\",
+      \\"ignore\\": [
+        \\"firebase.json\\",
+        \\"**/.*\\",
+        \\"**/node_modules/**\\"
+      ],
+      \\"rewrites\\": [
+        {
+          \\"source\\": \\"**\\",
+          \\"destination\\": \\"/index.html\\"
+        }
+      ]
+    },
+    {
+      \\"target\\": \\"pi-catch-you\\",
+      \\"public\\": \\"dist/ikachu\\",
+      \\"ignore\\": [
+        \\"firebase.json\\",
+        \\"**/.*\\",
+        \\"**/node_modules/**\\"
+      ],
+      \\"rewrites\\": [
+        {
+          \\"source\\": \\"**\\",
+          \\"destination\\": \\"/index.html\\"
+        }
+      ]
+    }
+  ]
+}"
+`;
+
+exports[`ng-add generating files overrides existing files 2`] = `
+"{
+  \\"targets\\": {
+    \\"pirojok-111e3\\": {
+      \\"hosting\\": {
+        \\"pie-ka-chu\\": [
+          \\"pirojok-111e3\\"
+        ]
+      }
+    },
+    \\"bi-catch-you-77e7e\\": {
+      \\"hosting\\": {
+        \\"pi-catch-you\\": [
+          \\"bi-catch-you-77e7e\\"
+        ]
+      }
+    }
+  }
+}"
+`;
+
+exports[`ng-add generating files overrides existing files 3`] = `
+"{
+  \\"projects\\": {
+    \\"pie-ka-chu\\": {
+      \\"projectType\\": \\"application\\",
+      \\"root\\": \\"pirojok\\",
+      \\"architect\\": {
+        \\"build\\": {
+          \\"options\\": {
+            \\"outputPath\\": \\"dist/ikachu\\"
+          }
+        },
+        \\"deploy\\": {
+          \\"builder\\": \\"ng-deploy:deploy\\",
+          \\"options\\": {}
+        }
+      }
+    },
+    \\"pi-catch-you\\": {
+      \\"projectType\\": \\"application\\",
+      \\"root\\": \\"pirojok\\",
+      \\"architect\\": {
+        \\"build\\": {
+          \\"options\\": {
+            \\"outputPath\\": \\"dist/ikachu\\"
+          }
+        },
+        \\"deploy\\": {
+          \\"builder\\": \\"ng-deploy:deploy\\",
+          \\"options\\": {}
+        }
+      }
+    }
+  }
+}"
+`;
