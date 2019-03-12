@@ -1,5 +1,5 @@
 {
-  "name": "kirjs-test-ng-deploy",
+  "name": "ng-deploy",
   "version": "0.0.0",
   "description": "A blank schematics",
   "scripts": {
