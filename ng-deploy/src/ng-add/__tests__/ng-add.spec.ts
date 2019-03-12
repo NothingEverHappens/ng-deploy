@@ -96,18 +96,25 @@ describe('ng-add', () => {
             })).toThrowError(/already exists in firebase.json/);
         });
 
-
-        it('Should throw if firebase.json has the project already', async () => {
+        it('Should throw if firebase.json is broken', async () => {
             const tree = Tree.empty();
             tree.create('angular.json', JSON.stringify(generateAngularJson()));
-            const tempTree = ngAdd(tree, {firebaseProject: FIREBASE_PROJECT, project: PROJECT_NAME});
-
-            expect(() => ngAdd(tempTree, {
-                firebaseProject: 'other-project',
+            tree.create('firebase.json', 'I\'m broken 😔');
+            expect(() => ngAdd(tree, {
+                firebaseProject: FIREBASE_PROJECT,
                 project: PROJECT_NAME
-            })).toThrowError(/already exists in firebase.json/);
+            })).toThrowError(/firebase.json: Unexpected token/);
         });
 
+        it('Should throw if .firebaserc is broken', async () => {
+            const tree = Tree.empty();
+            tree.create('angular.json', JSON.stringify(generateAngularJson()));
+            tree.create('.firebaserc', 'I\'m broken 😔');
+            expect(() => ngAdd(tree, {
+                firebaseProject: FIREBASE_PROJECT,
+                project: PROJECT_NAME
+            })).toThrowError(/.firebaserc: Unexpected token/);
+        });
 
         it('Should throw if firebase.json has the project already', async () => {
             const tree = Tree.empty();
@@ -120,7 +127,17 @@ describe('ng-add', () => {
             })).toThrowError(/ already defined in .firebaserc/);
         });
 
-        // TODO(kirjs): Test broken JSON.
+        it('Should throw if firebase.json is broken', async () => {
+            const tree = Tree.empty();
+            tree.create('angular.json', JSON.stringify(generateAngularJson()));
+
+            const tempTree = ngAdd(tree, {firebaseProject: FIREBASE_PROJECT, project: PROJECT_NAME});
+
+            expect(() => ngAdd(tempTree, {
+                firebaseProject: FIREBASE_PROJECT,
+                project: OTHER_PROJECT_NAME
+            })).toThrowError(/ already defined in .firebaserc/);
+        });
     });
 });
 

@@ -31,8 +31,16 @@ function generateHostingConfig(project: string, dist: string) {
     }
 }
 
+function safeReadJSON(path: string, tree: Tree){
+    try {
+        return JSON.parse(tree.read(path)!.toString())
+    } catch (e) {
+        throw new SchematicsException(`Error when parsing ${path}: ${e.message}`);
+    }
+}
+
 function generateFirebaseJson(tree: Tree, path: string, project: string, dist: string) {
-    const firebaseJson: FirebaseJSON = tree.exists(path) ? JSON.parse(tree.read(path)!.toString()) : emptyFirebaseJson();
+    let firebaseJson: FirebaseJSON = tree.exists(path) ? safeReadJSON(path, tree) : emptyFirebaseJson();
 
     if (firebaseJson.hosting.find(config => config.target === project)) {
         throw new SchematicsException(`Target ${project} already exists in firebase.json`);
@@ -56,7 +64,9 @@ function generateFirebaseRcTarget(firebaseProject: string, project: string) {
 }
 
 function generateFirebaseRc(tree: Tree, path: string, firebaseProject: string, project: string) {
-    const firebaseRc: FirebaseRc = tree.exists(path) ? JSON.parse(tree.read(path)!.toString()) : emptyFirebaseRc();
+    const firebaseRc: FirebaseRc = tree.exists(path) ? safeReadJSON(path, tree) : emptyFirebaseRc();
+
+
 
     if (firebaseProject in firebaseRc.targets) {
         throw new SchematicsException(`Firebase project ${firebaseProject} already defined in .firebaserc`);
@@ -144,7 +154,7 @@ export function ngAdd(tree: Tree, options: NgAddOptions) {
     };
 
     tree.overwrite(workspacePath, JSON.stringify(workspace, null, 2));
-    generateFirebaseJson(tree, '/firebase.json', options.project, outputPath);
-    generateFirebaseRc(tree, '/.firebaserc', options.firebaseProject, options.project);
+    generateFirebaseJson(tree, 'firebase.json', options.project, outputPath);
+    generateFirebaseRc(tree, '.firebaserc', options.firebaseProject, options.project);
     return tree;
 }
