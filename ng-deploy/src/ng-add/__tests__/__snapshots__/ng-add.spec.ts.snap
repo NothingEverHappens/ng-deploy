@@ -38,6 +38,7 @@ exports[`ng-add generating files generates new files if starting from scratch 2`
 
 exports[`ng-add generating files generates new files if starting from scratch 3`] = `
 "{
+  \\"defaultProject\\": \\"pie-ka-chu\\",
   \\"projects\\": {
     \\"pie-ka-chu\\": {
       \\"projectType\\": \\"application\\",
@@ -129,6 +130,7 @@ exports[`ng-add generating files overrides existing files 2`] = `
 
 exports[`ng-add generating files overrides existing files 3`] = `
 "{
+  \\"defaultProject\\": \\"pie-ka-chu\\",
   \\"projects\\": {
     \\"pie-ka-chu\\": {
       \\"projectType\\": \\"application\\",
@@ -157,6 +159,76 @@ exports[`ng-add generating files overrides existing files 3`] = `
         \\"deploy\\": {
           \\"builder\\": \\"ng-deploy:deploy\\",
           \\"options\\": {}
+        }
+      }
+    }
+  }
+}"
+`;
+
+exports[`ng-add generating files uses default project 1`] = `
+"{
+  \\"hosting\\": [
+    {
+      \\"target\\": \\"pie-ka-chu\\",
+      \\"public\\": \\"dist/ikachu\\",
+      \\"ignore\\": [
+        \\"firebase.json\\",
+        \\"**/.*\\",
+        \\"**/node_modules/**\\"
+      ],
+      \\"rewrites\\": [
+        {
+          \\"source\\": \\"**\\",
+          \\"destination\\": \\"/index.html\\"
+        }
+      ]
+    }
+  ]
+}"
+`;
+
+exports[`ng-add generating files uses default project 2`] = `
+"{
+  \\"targets\\": {
+    \\"pirojok-111e3\\": {
+      \\"hosting\\": {
+        \\"pie-ka-chu\\": [
+          \\"pirojok-111e3\\"
+        ]
+      }
+    }
+  }
+}"
+`;
+
+exports[`ng-add generating files uses default project 3`] = `
+"{
+  \\"defaultProject\\": \\"pie-ka-chu\\",
+  \\"projects\\": {
+    \\"pie-ka-chu\\": {
+      \\"projectType\\": \\"application\\",
+      \\"root\\": \\"pirojok\\",
+      \\"architect\\": {
+        \\"build\\": {
+          \\"options\\": {
+            \\"outputPath\\": \\"dist/ikachu\\"
+          }
+        },
+        \\"deploy\\": {
+          \\"builder\\": \\"ng-deploy:deploy\\",
+          \\"options\\": {}
+        }
+      }
+    },
+    \\"pi-catch-you\\": {
+      \\"projectType\\": \\"application\\",
+      \\"root\\": \\"pirojok\\",
+      \\"architect\\": {
+        \\"build\\": {
+          \\"options\\": {
+            \\"outputPath\\": \\"dist/ikachu\\"
+          }
         }
       }
     }

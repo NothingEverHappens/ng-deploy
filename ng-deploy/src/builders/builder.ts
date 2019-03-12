@@ -1,6 +1,5 @@
 import { BuilderContext, BuilderOutput, createBuilder } from '@angular-devkit/architect/src/index2';
 import { NodeJsSyncHost } from '@angular-devkit/core/node';
-// import { Schema as DeploySchema } from './schema';
 import deploy from './actions/deploy';
 import { experimental, join, normalize } from '@angular-devkit/core';
 import { getFirebaseProjectName } from '../shared/utils';

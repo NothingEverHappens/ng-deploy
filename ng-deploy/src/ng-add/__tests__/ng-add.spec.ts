@@ -25,6 +25,13 @@ describe('ng-add', () => {
             expect(result.read('angular.json')!.toString()).toMatchSnapshot();
         });
 
+        it('uses default project', async () => {
+            const result = ngAdd(tree, {firebaseProject: FIREBASE_PROJECT});
+            expect(result.read('firebase.json')!.toString()).toMatchSnapshot();
+            expect(result.read('.firebaserc')!.toString()).toMatchSnapshot();
+            expect(result.read('angular.json')!.toString()).toMatchSnapshot();
+        });
+
         it('overrides existing files', async () => {
             const tempTree = ngAdd(tree, {firebaseProject: FIREBASE_PROJECT, project: PROJECT_NAME});
             const result = ngAdd(tempTree, {firebaseProject: OTHER_FIREBASE_PROJECT_NAME, project: OTHER_PROJECT_NAME});
@@ -35,11 +42,15 @@ describe('ng-add', () => {
     });
 
     describe('error handling', () => {
-        it('requires project name', () => {
-            expect(() => ngAdd(Tree.empty(), {
+        it('fails if project not defined', () => {
+            const tree = Tree.empty();
+            const angularJSON = generateAngularJson();
+            delete angularJSON.defaultProject;
+            tree.create('angular.json', JSON.stringify(angularJSON));
+            expect(() => ngAdd(tree, {
                 firebaseProject: FIREBASE_PROJECT,
                 project: ''
-            })).toThrowError(/"project" is required/);
+            })).toThrowError(/No project selected and no default project in the workspace/);
         });
 
         it('Should throw if angular.json not found', async () => {
@@ -96,18 +107,25 @@ describe('ng-add', () => {
             })).toThrowError(/already exists in firebase.json/);
         });
 
-
-        it('Should throw if firebase.json has the project already', async () => {
+        it('Should throw if firebase.json is broken', async () => {
             const tree = Tree.empty();
             tree.create('angular.json', JSON.stringify(generateAngularJson()));
-            const tempTree = ngAdd(tree, {firebaseProject: FIREBASE_PROJECT, project: PROJECT_NAME});
-
-            expect(() => ngAdd(tempTree, {
-                firebaseProject: 'other-project',
+            tree.create('firebase.json', 'I\'m broken 😔');
+            expect(() => ngAdd(tree, {
+                firebaseProject: FIREBASE_PROJECT,
                 project: PROJECT_NAME
-            })).toThrowError(/already exists in firebase.json/);
+            })).toThrowError(/firebase.json: Unexpected token/);
         });
 
+        it('Should throw if .firebaserc is broken', async () => {
+            const tree = Tree.empty();
+            tree.create('angular.json', JSON.stringify(generateAngularJson()));
+            tree.create('.firebaserc', 'I\'m broken 😔');
+            expect(() => ngAdd(tree, {
+                firebaseProject: FIREBASE_PROJECT,
+                project: PROJECT_NAME
+            })).toThrowError(/.firebaserc: Unexpected token/);
+        });
 
         it('Should throw if firebase.json has the project already', async () => {
             const tree = Tree.empty();
@@ -120,13 +138,24 @@ describe('ng-add', () => {
             })).toThrowError(/ already defined in .firebaserc/);
         });
 
-        // TODO(kirjs): Test broken JSON.
+        it('Should throw if firebase.json is broken', async () => {
+            const tree = Tree.empty();
+            tree.create('angular.json', JSON.stringify(generateAngularJson()));
+
+            const tempTree = ngAdd(tree, {firebaseProject: FIREBASE_PROJECT, project: PROJECT_NAME});
+
+            expect(() => ngAdd(tempTree, {
+                firebaseProject: FIREBASE_PROJECT,
+                project: OTHER_PROJECT_NAME
+            })).toThrowError(/ already defined in .firebaserc/);
+        });
     });
 });
 
 
 function generateAngularJson() {
     return {
+        defaultProject: PROJECT_NAME,
         projects: {
             [PROJECT_NAME]: {
                 projectType: 'application',
