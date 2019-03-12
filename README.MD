@@ -1,3 +1,26 @@
+# Angular-cli deploy to firebase
+
+This angular schematic would allow you to deploy you Angular app to Firebase Hosting.
+
+## Installing 
+Run `ng --version`, make sure you have angular CLI version greater than 8.
+
+Add the schematic by running: 
+
+```sh
+ng add kirjs-test-ng-deploy
+```
+
+This command will prompt you to login to firebase and configure the project.
+
+## Deploying
+
+```sh
+ng deploy:firebase ?? this is tbd
+```
+
+### TODO:(kirjs): Remove below or find a better name
+
 To run the builder:
 ```sh
 cd ng-deploy
