@@ -31,7 +31,7 @@ function generateHostingConfig(project: string, dist: string) {
     }
 }
 
-function safeReadJSON(path: string, tree: Tree){
+function safeReadJSON(path: string, tree: Tree) {
     try {
         return JSON.parse(tree.read(path)!.toString())
     } catch (e) {
@@ -65,7 +65,6 @@ function generateFirebaseRcTarget(firebaseProject: string, project: string) {
 
 function generateFirebaseRc(tree: Tree, path: string, firebaseProject: string, project: string) {
     const firebaseRc: FirebaseRc = tree.exists(path) ? safeReadJSON(path, tree) : emptyFirebaseRc();
-
 
 
     if (firebaseProject in firebaseRc.targets) {
@@ -113,26 +112,20 @@ function getWorkspace(
 
 interface NgAddOptions {
     firebaseProject: string;
-    project: string;
+    project?: string;
 }
 
 export function ngAdd(tree: Tree, options: NgAddOptions) {
+    const {path: workspacePath, workspace} = getWorkspace(tree);
+
     if (!options.project) {
-        throw new SchematicsException('Option "project" is required');
+        if (workspace.defaultProject) {
+            options.project = workspace.defaultProject;
+        } else {
+            throw new SchematicsException('No project selected and no default project in the workspace');
+        }
     }
 
-    // TODO(kirjs): Uncomment
-    // const ngDeploy = {
-    //   type: NodeDependencyType.Dev,
-    //   name: 'ng-deploy',
-    //   version: '../ng-deploy'
-    // };
-    //  TODO: Research if there is a better alternative
-    // addPackageJsonDependency(tree, ngDeploy);
-
-    // _context.addTask(new NodePackageInstallTask());
-
-    const {path: workspacePath, workspace} = getWorkspace(tree);
     const project = workspace.projects[options.project];
     if (!project) {
         throw new SchematicsException('Project is not defined in this workspace');
