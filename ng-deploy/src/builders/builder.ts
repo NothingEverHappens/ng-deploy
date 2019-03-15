@@ -8,18 +8,27 @@ import { getFirebaseProjectName } from '../shared/utils';
 // createJobHandler() but add typings specific to Architect Builders.
 export default createBuilder<any>(
     async (_: any, context: BuilderContext): Promise<BuilderOutput> => {
-        // TODO: handle failure
         // The project root is added to a BuilderContext.
         const root = normalize(context.workspaceRoot);
         const workspace = new experimental.workspace.Workspace(root, new NodeJsSyncHost());
         await workspace.loadWorkspaceFromHost(normalize('angular.json')).toPromise();
+
         if (!context.target) {
             throw new Error('Cannot deploy the application without a target');
         }
+
         const project = workspace.getProject(context.target.project);
 
         const firebaseProject = getFirebaseProjectName(workspace.root, context.target.project);
 
-        return deploy(require('firebase-tools'), context, join(workspace.root, project.root), firebaseProject).then(() => ({success: true}));
+        try {
+            await deploy(require('firebase-tools'), context, join(workspace.root, project.root), firebaseProject);
+        } catch (e) {
+            console.error('Error when trying to deploy: ');
+            console.error(e.message);
+            return {success: false}
+        }
+
+        return {success: true}
     }
 );
